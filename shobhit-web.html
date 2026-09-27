@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shobhit Web — Learn. Explore. Grow.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  --bg:#F6F8FC; --surface:#FFFFFF; --surface-2:#EFF3FA;
+  --text:#141A2E; --text-dim:#5B6478; --border:#E1E7F2;
+  --primary:#4F46E5; --primary-ink:#FFFFFF; --accent:#14B8A6;
+  --shadow: 0 1px 2px rgba(20,26,46,.04), 0 8px 24px rgba(20,26,46,.06);
+  --radius:16px;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+:root[data-theme="dark"]{
+  --bg:#0D1120; --surface:#151A2E; --surface-2:#1B2138;
+  --text:#EDEFF7; --text-dim:#9AA3BD; --border:#262D48;
+  --primary:#7C7AFF; --primary-ink:#0D1120; --accent:#2DD4BF;
+  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px rgba(0,0,0,.4);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]):not([data-theme="dark"]){
+    --bg:#0D1120; --surface:#151A2E; --surface-2:#1B2138;
+    --text:#EDEFF7; --text-dim:#9AA3BD; --border:#262D48;
+    --primary:#7C7AFF; --primary-ink:#0D1120; --accent:#2DD4BF;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 12px 28px rgba(0,0,0,.4);
+  }
+}
+html{scroll-behavior:smooth; scroll-padding-top:calc(76px + env(safe-area-inset-top,0px));}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased;
+  transition:background .25s ease, color .25s ease;
+  overflow-x:hidden;
+}
+h1,h2,h3{font-family:'Sora',sans-serif; margin:0; letter-spacing:-0.01em;}
+a{color:inherit; text-decoration:none;}
+button{font-family:inherit;}
+img{max-width:100%; display:block;}
+.wrap{max-width:1180px; margin:0 auto; padding:0 20px;}
+
+/* ---------- Header ---------- */
+header{
+  position:sticky; top:0; z-index:60; background:var(--surface);
+  border-bottom:1px solid var(--border);
+  padding-top:env(safe-area-inset-top,0px);
+}
+.headbar{
+  max-width:1180px; margin:0 auto; padding:12px 20px;
+  display:flex; align-items:center; gap:14px;
+}
+.logo{display:flex; align-items:center; gap:10px; flex-shrink:0; cursor:pointer;}
+.logo-mark{
+  width:38px; height:38px; border-radius:11px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  display:flex; align-items:center; justify-content:center;
+  color:#fff; font-family:'Sora',sans-serif; font-weight:800; font-size:16px; flex-shrink:0;
+}
+.logo-text{font-family:'Sora',sans-serif; font-weight:700; font-size:18px; white-space:nowrap;}
+.logo-text span{color:var(--primary);}
+
+.searchbox{
+  flex:1; max-width:420px; position:relative; display:none;
+}
+.searchbox input{
+  width:100%; padding:10px 14px 10px 38px; border-radius:10px;
+  border:1px solid var(--border); background:var(--surface-2); color:var(--text);
+  font-size:14px; outline:none; transition:border-color .2s;
+}
+.searchbox input:focus{border-color:var(--primary);}
+.searchbox .icon{position:absolute; left:12px; top:50%; transform:translateY(-50%); opacity:.6; font-size:14px;}
+
+.head-actions{display:flex; align-items:center; gap:8px; margin-left:auto;}
+.icon-btn{
+  width:38px; height:38px; border-radius:10px; border:1px solid var(--border);
+  background:var(--surface-2); color:var(--text); display:flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:16px; flex-shrink:0; transition:background .15s, transform .1s;
+}
+.icon-btn:hover{background:var(--border);}
+.icon-btn:active{transform:scale(.94);}
+.btn{
+  padding:9px 16px; border-radius:10px; border:1px solid var(--border); background:var(--surface-2);
+  color:var(--text); font-weight:600; font-size:14px; cursor:pointer; white-space:nowrap;
+  transition:background .15s, transform .1s;
+}
+.btn:active{transform:scale(.96);}
+.btn-primary{background:var(--primary); color:var(--primary-ink); border-color:var(--primary);}
+.btn-primary:hover{filter:brightness(1.06);}
+.auth-actions{display:none; gap:8px;}
+@media(min-width:760px){ .searchbox{display:block;} .auth-actions{display:flex;} }
+
+/* mobile search toggle */
+.mobile-search-btn{display:flex;}
+@media(min-width:760px){ .mobile-search-btn{display:none;} }
+.mobile-search-panel{
+  display:none; padding:0 20px 12px; border-top:1px solid var(--border);
+}
+.mobile-search-panel.open{display:block; padding-top:12px;}
+.mobile-search-panel input{
+  width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--border);
+  background:var(--surface-2); color:var(--text); font-size:14px; outline:none;
+}
+
+/* ---------- Search results dropdown ---------- */
+.search-results{
+  position:absolute; top:calc(100% + 8px); left:0; right:0; background:var(--surface);
+  border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow);
+  max-height:340px; overflow-y:auto; display:none; z-index:70;
+}
+.search-results.open{display:block;}
+.sr-item{padding:11px 14px; border-bottom:1px solid var(--border); cursor:pointer; font-size:14px; transition:background .12s;}
+.sr-item:last-child{border-bottom:none;}
+.sr-item:hover{background:var(--surface-2);}
+.sr-item small{display:block; color:var(--text-dim); font-size:12px; margin-top:2px;}
+.sr-empty{padding:16px; text-align:center; color:var(--text-dim); font-size:14px;}
+
+/* ---------- Hamburger menu ---------- */
+.menu-overlay{
+  position:fixed; inset:0; background:rgba(10,12,24,.5); z-index:90;
+  opacity:0; pointer-events:none; transition:opacity .25s ease;
+}
+.menu-overlay.open{opacity:1; pointer-events:auto;}
+.menu-panel{
+  position:fixed; top:0; right:0; height:100%; width:min(320px,86vw);
+  background:var(--surface); z-index:91; box-shadow:-8px 0 30px rgba(0,0,0,.15);
+  transform:translateX(100%); transition:transform .3s cubic-bezier(.4,0,.2,1);
+  display:flex; flex-direction:column;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+.menu-panel.open{transform:translateX(0);}
+.menu-head{display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid var(--border);}
+.menu-close{width:34px;height:34px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;font-size:16px;}
+.menu-list{list-style:none; margin:0; padding:10px; overflow-y:auto;}
+.menu-list li a{
+  display:flex; align-items:center; gap:14px; padding:13px 12px; border-radius:11px;
+  font-weight:600; font-size:15px; color:var(--text); transition:background .15s;
+}
+.menu-list li a:hover{background:var(--surface-2);}
+.menu-list li a .mi{font-size:18px; width:24px; text-align:center;}
+
+/* ---------- Hero ---------- */
+.hero{
+  padding:64px 20px 56px; text-align:center; position:relative; overflow:hidden;
+  background:
+    radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--primary) 14%, transparent), transparent 55%),
+    radial-gradient(circle at 85% 30%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 55%);
+}
+.hero-eyebrow{display:inline-block; padding:6px 14px; border-radius:999px; background:var(--surface-2); border:1px solid var(--border); font-size:13px; color:var(--text-dim); margin-bottom:20px;}
+.hero h1{font-size:clamp(30px,5.6vw,52px); line-height:1.08; max-width:16ch; margin:0 auto;}
+.hero h1 .hl{color:var(--primary);}
+.hero p.sub{font-size:clamp(15px,2vw,18px); color:var(--text-dim); margin:18px auto 30px; max-width:46ch;}
+.hero-cta{display:flex; gap:12px; justify-content:center; flex-wrap:wrap;}
+.hero-cta .btn{padding:13px 26px; font-size:15px; border-radius:12px;}
+
+/* ---------- Sections ---------- */
+.section{padding:52px 20px;}
+.section-head{margin-bottom:26px; max-width:640px;}
+.section-head h2{font-size:clamp(21px,3vw,27px);}
+.section-head p{color:var(--text-dim); font-size:14.5px; margin-top:6px;}
+
+.grid{
+  display:grid; gap:14px;
+  grid-template-columns:repeat(2,1fr);
+}
+@media(min-width:640px){ .grid{grid-template-columns:repeat(3,1fr);} }
+@media(min-width:980px){ .grid{grid-template-columns:repeat(4,1fr);} }
+
+.card{
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  padding:18px; cursor:pointer; box-shadow:var(--shadow);
+  transition:transform .18s ease, border-color .18s ease;
+  opacity:0; transform:translateY(14px);
+  animation:cardIn .5s ease forwards;
+}
+.card:hover{transform:translateY(-4px); border-color:var(--primary);}
+.card:active{transform:translateY(-1px) scale(.99);}
+.card .ic{
+  width:40px; height:40px; border-radius:10px; background:var(--surface-2);
+  display:flex; align-items:center; justify-content:center; font-size:19px; margin-bottom:12px;
+}
+.card h3{font-size:14.5px; font-weight:600; line-height:1.3;}
+.card p{font-size:12.5px; color:var(--text-dim); margin:6px 0 0; line-height:1.4;}
+@keyframes cardIn{to{opacity:1; transform:translateY(0);}}
+
+.section-alt{background:var(--surface-2);}
+
+/* fade in on scroll */
+.reveal{opacity:0; transform:translateY(16px); transition:opacity .5s ease, transform .5s ease;}
+.reveal.in{opacity:1; transform:translateY(0);}
+
+/* ---------- Modals (auth) ---------- */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(10,12,24,.55); z-index:120;
+  display:none; align-items:center; justify-content:center; padding:20px;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--surface); border-radius:18px; width:100%; max-width:380px;
+  padding:26px; box-shadow:var(--shadow);
+  animation:modalIn .22s ease;
+}
+@keyframes modalIn{from{opacity:0; transform:scale(.95) translateY(6px);} to{opacity:1; transform:scale(1) translateY(0);}}
+.modal-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
+.modal h3{font-size:19px;}
+.modal .sub-t{color:var(--text-dim); font-size:13.5px; margin-bottom:18px;}
+.field{margin-bottom:13px;}
+.field label{display:block; font-size:13px; font-weight:600; margin-bottom:6px;}
+.field input{
+  width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--border);
+  background:var(--surface-2); color:var(--text); font-size:14px; outline:none;
+}
+.field input:focus{border-color:var(--primary);}
+.modal .btn-primary{width:100%; padding:11px; border-radius:10px; margin-top:6px; font-size:14.5px;}
+.modal-switch{text-align:center; font-size:13.5px; color:var(--text-dim); margin-top:14px;}
+.modal-switch a{color:var(--primary); font-weight:600; cursor:pointer;}
+.modal-x{width:30px;height:30px;border-radius:8px;border:1px solid var(--border);background:var(--surface-2);cursor:pointer;color:var(--text);}
+.form-msg{font-size:13px; color:var(--accent); text-align:center; margin-top:10px; display:none;}
+.form-msg.show{display:block;}
+
+/* ---------- Footer ---------- */
+footer{background:var(--surface); border-top:1px solid var(--border); padding:44px 20px 24px;}
+.foot-grid{display:grid; gap:28px; grid-template-columns:1fr; max-width:1180px; margin:0 auto;}
+@media(min-width:700px){ .foot-grid{grid-template-columns:1.4fr 1fr 1fr 1fr;} }
+.foot-col h4{font-size:13px; text-transform:none; color:var(--text-dim); margin-bottom:12px; font-weight:600;}
+.foot-col ul{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:9px;}
+.foot-col ul a{font-size:14px; color:var(--text); transition:color .15s;}
+.foot-col ul a:hover{color:var(--primary);}
+.foot-bottom{max-width:1180px; margin:34px auto 0; padding-top:18px; border-top:1px solid var(--border); text-align:center; color:var(--text-dim); font-size:13px;}
+
+/* util */
+.container-x{overflow-x:hidden;}
+::selection{background:color-mix(in srgb, var(--primary) 30%, transparent);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="headbar">
+    <a class="logo" href="#home">
+      <div class="logo-mark">SW</div>
+      <div class="logo-text">Shobhit <span>Web</span></div>
+    </a>
+
+    <div class="searchbox" id="desktopSearchWrap">
+      <span class="icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search notes, exams, and more..." autocomplete="off">
+      <div class="search-results" id="searchResults"></div>
+    </div>
+
+    <div class="head-actions">
+      <button class="icon-btn mobile-search-btn" id="mobileSearchToggle" aria-label="Search">🔍</button>
+      <div class="auth-actions">
+        <button class="btn" id="loginBtn">Log in</button>
+        <button class="btn btn-primary" id="signupBtn">Sign up</button>
+      </div>
+      <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">🌙</button>
+      <button class="icon-btn" id="menuToggle" aria-label="Open menu">☰</button>
+    </div>
+  </div>
+
+  <div class="mobile-search-panel" id="mobileSearchPanel">
+    <input type="text" id="searchInputMobile" placeholder="Search notes, exams, and more..." autocomplete="off">
+    <div class="search-results" id="searchResultsMobile" style="position:static; margin-top:8px;"></div>
+  </div>
+</header>
+
+<!-- Hamburger Menu -->
+<div class="menu-overlay" id="menuOverlay"></div>
+<nav class="menu-panel" id="menuPanel">
+  <div class="menu-head">
+    <div class="logo-text">Menu</div>
+    <button class="menu-close" id="menuClose">✕</button>
+  </div>
+  <ul class="menu-list">
+    <li><a href="#home" class="menu-link" data-target="home"><span class="mi">🏠</span>Home</a></li>
+    <li><a href="#useful-websites" class="menu-link" data-target="useful-websites"><span class="mi">🌐</span>Useful Websites</a></li>
+    <li><a href="#study-hub" class="menu-link" data-target="study-hub"><span class="mi">📚</span>Study Hub</a></li>
+    <li><a href="#computer-coding" class="menu-link" data-target="computer-coding"><span class="mi">💻</span>Computer &amp; Coding</a></li>
+    <li><a href="#exam-preparation" class="menu-link" data-target="exam-preparation"><span class="mi">📝</span>Exam Preparation</a></li>
+  </ul>
+</nav>
+
+<main id="home">
+  <!-- Hero -->
+  <section class="hero">
+    <span class="hero-eyebrow">For students, by students</span>
+    <h1>Welcome to <span class="hl">Shobhit Web</span></h1>
+    <p class="sub">Learn • Explore • Grow</p>
+    <div class="hero-cta">
+      <button class="btn btn-primary" id="exploreBtn">Explore Now</button>
+      <button class="btn" onclick="document.getElementById('signupBtn').click()">Create free account</button>
+    </div>
+  </section>
+
+  <!-- Study Hub -->
+  <section class="section" id="study-hub">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>📚 Study Hub</h2>
+        <p>Everything you need to prepare, organised in one place.</p>
+      </div>
+      <div class="grid" id="studyhub-grid"></div>
+    </div>
+  </section>
+
+  <!-- Computer & Coding -->
+  <section class="section section-alt" id="computer-coding">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>💻 Computer &amp; Coding</h2>
+        <p>Learn to code from the basics to real practice projects.</p>
+      </div>
+      <div class="grid" id="coding-grid"></div>
+    </div>
+  </section>
+
+  <!-- Exam Preparation -->
+  <section class="section" id="exam-preparation">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>📝 Exam Preparation</h2>
+        <p>Structured prep for school, college and competitive exams.</p>
+      </div>
+      <div class="grid" id="exam-grid"></div>
+    </div>
+  </section>
+
+  <!-- Useful Websites -->
+  <section class="section section-alt" id="useful-websites">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>🌐 Useful Websites</h2>
+        <p>Trusted external resources, handpicked for students.</p>
+      </div>
+      <div class="grid" id="useful-grid"></div>
+    </div>
+  </section>
+
+  <!-- Student Account -->
+  <section class="section" id="account">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>👤 Student Account</h2>
+        <p>Your personal space to save progress and pick up where you left off.</p>
+      </div>
+      <div class="grid" id="account-grid"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-col">
+      <div class="logo" style="margin-bottom:8px;">
+        <div class="logo-mark">SW</div>
+        <div class="logo-text">Shobhit <span>Web</span></div>
+      </div>
+      <p style="color:var(--text-dim); font-size:14px; margin:6px 0 0;">Learn • Explore • Grow</p>
+    </div>
+    <div class="foot-col">
+      <h4>Quick Links</h4>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#study-hub">Study Hub</a></li>
+        <li><a href="#computer-coding">Computer &amp; Coding</a></li>
+        <li><a href="#exam-preparation">Exam Preparation</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Resources</h4>
+      <ul>
+        <li><a href="#useful-websites">Useful Websites</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Account</h4>
+      <ul>
+        <li><a id="footLogin">Login</a></li>
+        <li><a id="footSignup">Sign Up</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">© 2026 Shobhit Web. All Rights Reserved.</div>
+</footer>
+
+<!-- Login Modal -->
+<div class="modal-overlay" id="loginOverlay">
+  <div class="modal">
+    <div class="modal-head"><h3>Log in</h3><button class="modal-x" id="loginClose">✕</button></div>
+    <p class="sub-t">Welcome back to Shobhit Web.</p>
+    <form id="loginForm">
+      <div class="field"><label>Email</label><input type="email" required placeholder="you@example.com"></div>
+      <div class="field"><label>Password</label><input type="password" required placeholder="••••••••"></div>
+      <button class="btn btn-primary" type="submit">Log in</button>
+      <div class="form-msg" id="loginMsg">Logged in successfully.</div>
+    </form>
+    <div class="modal-switch">New here? <a id="toSignup">Create an account</a></div>
+  </div>
+</div>
+
+<!-- Signup Modal -->
+<div class="modal-overlay" id="signupOverlay">
+  <div class="modal">
+    <div class="modal-head"><h3>Create account</h3><button class="modal-x" id="signupClose">✕</button></div>
+    <p class="sub-t">Join Shobhit Web for free.</p>
+    <form id="signupForm">
+      <div class="field"><label>Name</label><input type="text" required placeholder="Your name"></div>
+      <div class="field"><label>Email</label><input type="email" required placeholder="you@example.com"></div>
+      <div class="field"><label>Password</label><input type="password" required placeholder="Create a password"></div>
+      <button class="btn btn-primary" type="submit">Create account</button>
+      <div class="form-msg" id="signupMsg">Account created successfully.</div>
+    </form>
+    <div class="modal-switch">Already have an account? <a id="toLogin">Log in</a></div>
+  </div>
+</div>
+
+<script>
+/* ---------- Content data ---------- */
+const DATA = {
+  studyhub: [
+    {i:'📓',t:'Notes',d:'Chapter-wise notes for quick revision'},
+    {i:'🗂️',t:'Syllabus',d:'Latest official syllabus, subject-wise'},
+    {i:'❓',t:'Important Questions',d:'Frequently asked exam questions'},
+    {i:'📄',t:'Previous Year Papers',d:'Solved papers from past years'},
+    {i:'📦',t:'Study Materials',d:'Curated PDFs and reference material'},
+  ],
+  coding: [
+    {i:'🌐',t:'HTML',d:'HTML Notes, tutorials & practice'},
+    {i:'🎨',t:'CSS',d:'Styling, layouts and responsive design'},
+    {i:'⚡',t:'JavaScript',d:'Tutorials, practice and projects'},
+    {i:'🧩',t:'Programming Basics',d:'Logic building for beginners'},
+    {i:'🖥️',t:'Computer Fundamentals',d:'Core computer science concepts'},
+    {i:'🛠️',t:'Practice Projects',d:'Hands-on mini projects to build'},
+  ],
+  exam: [
+    {i:'🏆',t:'Competitive Exams',d:'UPSSSC PET, SSC, banking & more'},
+    {i:'🎓',t:'School/College Exams',d:'Board and semester exam prep'},
+    {i:'📋',t:'Exam-wise Syllabus',d:'Detailed syllabus per exam'},
+    {i:'✅',t:'Mock Tests',d:'Timed practice tests'},
+    {i:'📝',t:'Practice Questions',d:'Topic-wise question banks'},
+  ],
+  useful: [
+    {i:'🏛️',t:'Government Portals',d:'Official student & citizen services'},
+    {i:'🏫',t:'Education Websites',d:'Trusted learning platforms'},
+    {i:'🎗️',t:'Scholarship Portals',d:'Find and apply for scholarships'},
+    {i:'🎬',t:'Online Learning',d:'Video courses and lectures'},
+    {i:'🧑‍🎓',t:'Student Services',d:'ID cards, forms and support'},
+  ],
+  account: [
+    {i:'✨',t:'Create Account',d:'Join Shobhit Web for free'},
+    {i:'🔑',t:'Login',d:'Access your saved space'},
+    {i:'💾',t:'Saved Notes',d:'Notes you\'ve bookmarked'},
+    {i:'🔖',t:'Bookmarks',d:'Quick links you saved'},
+    {i:'🕘',t:'Recently Viewed',d:'Pick up where you left off'},
+    {i:'📊',t:'Personal Dashboard',d:'Your progress at a glance'},
+  ],
+};
+
+const SEARCH_INDEX = [
+  {k:['html'], items:[{t:'HTML Notes',c:'Study Hub'},{t:'HTML Tutorials',c:'Computer & Coding'},{t:'HTML Practice Projects',c:'Computer & Coding'}]},
+  {k:['javascript','js'], items:[{t:'JavaScript Tutorials',c:'Computer & Coding'},{t:'JavaScript Practice',c:'Computer & Coding'},{t:'Projects',c:'Computer & Coding'}]},
+  {k:['css'], items:[{t:'CSS Notes',c:'Computer & Coding'},{t:'CSS Practice',c:'Computer & Coding'}]},
+  {k:['upsssc','pet','upsssc pet'], items:[{t:'UPSSSC PET Exam Info',c:'Exam Preparation'},{t:'UPSSSC PET Syllabus',c:'Exam Preparation'},{t:'UPSSSC PET Notes',c:'Exam Preparation'},{t:'Practice Questions',c:'Exam Preparation'},{t:'Previous Year Papers',c:'Study Hub'}]},
+  {k:['scholarship'], items:[{t:'Scholarship Resources',c:'Useful Websites'},{t:'Useful Websites',c:'Useful Websites'}]},
+  {k:['notes'], items:[{t:'Notes',c:'Study Hub'},{t:'Study Materials',c:'Study Hub'}]},
+  {k:['syllabus'], items:[{t:'Syllabus',c:'Study Hub'},{t:'Exam-wise Syllabus',c:'Exam Preparation'}]},
+  {k:['mock test','mock'], items:[{t:'Mock Tests',c:'Exam Preparation'}]},
+];
+
+function buildGrid(id, arr){
+  const el = document.getElementById(id);
+  el.innerHTML = arr.map((c,i)=>`<div class="card" style="animation-delay:${i*0.05}s" onclick="alert('${c.t.replace(/'/g,"")} — coming soon!')"><div class="ic">${c.i}</div><h3>${c.t}</h3><p>${c.d}</p></div>`).join('');
+}
+Object.entries({studyhub:'studyhub-grid',coding:'coding-grid',exam:'exam-grid',useful:'useful-grid',account:'account-grid'}).forEach(([k,id])=>buildGrid(id,DATA[k]));
+
+/* ---------- Theme ---------- */
+const root = document.documentElement;
+const themeBtn = document.getElementById('themeToggle');
+function applyThemeIcon(){
+  const t = root.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light');
+  themeBtn.textContent = t === 'dark' ? '☀️' : '🌙';
+}
+try{
+  const saved = localStorage.getItem('sw-theme');
+  if(saved){ root.setAttribute('data-theme', saved); }
+}catch(e){}
+applyThemeIcon();
+themeBtn.addEventListener('click', ()=>{
+  const current = root.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light');
+  const next = current === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', next);
+  try{ localStorage.setItem('sw-theme', next); }catch(e){}
+  applyThemeIcon();
+});
+
+/* ---------- Hamburger menu ---------- */
+const menuOverlay = document.getElementById('menuOverlay');
+const menuPanel = document.getElementById('menuPanel');
+function openMenu(){ menuOverlay.classList.add('open'); menuPanel.classList.add('open'); document.body.style.overflow='hidden'; }
+function closeMenu(){ menuOverlay.classList.remove('open'); menuPanel.classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('menuToggle').addEventListener('click', openMenu);
+document.getElementById('menuClose').addEventListener('click', closeMenu);
+menuOverlay.addEventListener('click', closeMenu);
+document.querySelectorAll('.menu-link').forEach(a=>{
+  a.addEventListener('click', (e)=>{
+    e.preventDefault();
+    const target = document.getElementById(a.dataset.target);
+    closeMenu();
+    if(target){
+      /* wait for the menu-close transition so the scroll lands on the
+         correct section instead of being fought by the panel animation */
+      setTimeout(()=> target.scrollIntoView({behavior:'smooth', block:'start'}), 260);
+    }
+  });
+});
+
+/* ---------- Mobile search toggle ---------- */
+const mobilePanel = document.getElementById('mobileSearchPanel');
+document.getElementById('mobileSearchToggle').addEventListener('click', ()=>{
+  mobilePanel.classList.toggle('open');
+  if(mobilePanel.classList.contains('open')) document.getElementById('searchInputMobile').focus();
+});
+
+/* ---------- Smart search ---------- */
+function runSearch(query){
+  const q = query.trim().toLowerCase();
+  if(!q) return null;
+  const hit = SEARCH_INDEX.find(entry => entry.k.some(k => q.includes(k) || k.includes(q)));
+  return hit ? hit.items : [];
+}
+function renderResults(container, items){
+  if(items === null){ container.classList.remove('open'); container.innerHTML=''; return; }
+  if(items.length === 0){
+    container.innerHTML = '<div class="sr-empty">No results found</div>';
+  } else {
+    container.innerHTML = items.map(it=>`<div class="sr-item">${it.t}<small>${it.c}</small></div>`).join('');
+  }
+  container.classList.add('open');
+}
+function wireSearch(inputId, resultsId){
+  const input = document.getElementById(inputId);
+  const results = document.getElementById(resultsId);
+  input.addEventListener('input', ()=> renderResults(results, runSearch(input.value)));
+  input.addEventListener('focus', ()=> { if(input.value.trim()) renderResults(results, runSearch(input.value)); });
+  document.addEventListener('click', (e)=>{
+    if(!input.contains(e.target) && !results.contains(e.target)) renderResults(results, null);
+  });
+}
+wireSearch('searchInput','searchResults');
+wireSearch('searchInputMobile','searchResultsMobile');
+
+/* ---------- Explore Now ---------- */
+document.getElementById('exploreBtn').addEventListener('click', ()=>{
+  document.getElementById('study-hub').scrollIntoView({behavior:'smooth'});
+});
+
+/* ---------- Auth modals ---------- */
+const loginOverlay = document.getElementById('loginOverlay');
+const signupOverlay = document.getElementById('signupOverlay');
+function openModal(el){ el.classList.add('open'); }
+function closeModal(el){ el.classList.remove('open'); }
+['loginBtn','footLogin'].forEach(id=>document.getElementById(id)?.addEventListener('click', ()=>openModal(loginOverlay)));
+['signupBtn','footSignup'].forEach(id=>document.getElementById(id)?.addEventListener('click', ()=>openModal(signupOverlay)));
+document.getElementById('loginClose').addEventListener('click', ()=>closeModal(loginOverlay));
+document.getElementById('signupClose').addEventListener('click', ()=>closeModal(signupOverlay));
+loginOverlay.addEventListener('click', e=>{ if(e.target===loginOverlay) closeModal(loginOverlay); });
+signupOverlay.addEventListener('click', e=>{ if(e.target===signupOverlay) closeModal(signupOverlay); });
+document.getElementById('toSignup').addEventListener('click', ()=>{ closeModal(loginOverlay); openModal(signupOverlay); });
+document.getElementById('toLogin').addEventListener('click', ()=>{ closeModal(signupOverlay); openModal(loginOverlay); });
+
+document.getElementById('loginForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  document.getElementById('loginMsg').classList.add('show');
+  setTimeout(()=>{ closeModal(loginOverlay); document.getElementById('loginMsg').classList.remove('show'); e.target.reset(); }, 900);
+});
+document.getElementById('signupForm').addEventListener('submit', e=>{
+  e.preventDefault();
+  document.getElementById('signupMsg').classList.add('show');
+  setTimeout(()=>{ closeModal(signupOverlay); document.getElementById('signupMsg').classList.remove('show'); e.target.reset(); }, 900);
+});
+document.querySelectorAll('.account-card, #account-grid .card').forEach(()=>{});
+
+/* Account grid links open modals for Create Account / Login */
+document.getElementById('account-grid').addEventListener('click', (e)=>{
+  const card = e.target.closest('.card');
+  if(!card) return;
+  const title = card.querySelector('h3').textContent;
+  if(title === 'Create Account'){ e.stopPropagation(); openModal(signupOverlay); }
+  if(title === 'Login'){ e.stopPropagation(); openModal(loginOverlay); }
+}, true);
+
+/* ---------- Scroll reveal ---------- */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(en=>{ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
+},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* Escape key closes overlays */
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape'){ closeMenu(); closeModal(loginOverlay); closeModal(signupOverlay); }
+});
+</script>
+</body>
+</html>
